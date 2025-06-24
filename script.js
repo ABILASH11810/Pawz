@@ -6,7 +6,10 @@ const supabase = window.supabase.createClient(
 let pets = [];
 
 async function fetchPets() {
-  const { data, error } = await supabase.from('Paws_information').select('*');
+  const { data, error } = await supabase
+    .from('Paws_information')
+    .select('pet_breed, location, user_name, phone_number, description, pet_image');
+
   if (error) return console.error('Fetch error:', error);
   pets = data;
   renderPets(pets);
@@ -19,7 +22,7 @@ function renderPets(petList) {
     const card = document.createElement("div");
     card.className = "bg-white rounded shadow cursor-pointer hover:shadow-lg";
     card.innerHTML = `
-      <img src="${pet.pet_image[0]}" alt="${pet.pet_breed}" class="w-full h-48 object-cover rounded-t">
+      <img src="${pet.pet_image?.[0] || ''}" alt="${pet.pet_breed}" class="w-full h-48 object-cover rounded-t">
       <div class="p-4">
         <h3 class="font-bold text-lg">${pet.pet_breed}</h3>
         <p>Location: ${pet.location}</p>
