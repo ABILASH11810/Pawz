@@ -109,7 +109,7 @@ function openModal(pet) {
     </div>
     <p><strong>Location:</strong> ${pet.location}</p>
     <p><strong>Description:</strong> ${pet.description}</p>
-    <p><strong>Poster:</strong> ${pet.user_name}</p>
+    <p><strong>Posted by:</strong> ${pet.user_name}</p>
     <p><strong>Phone:</strong> ${pet.phone_number}</p>
   `;
   modal.classList.remove("hidden");
