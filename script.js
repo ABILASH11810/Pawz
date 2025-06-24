@@ -19,12 +19,12 @@ function renderPets(petList) {
     const card = document.createElement("div");
     card.className = "bg-white rounded shadow cursor-pointer hover:shadow-lg";
     card.innerHTML = `
-      <img src="${pet.images[0]}" alt="${pet.name}" class="w-full h-48 object-cover rounded-t">
+      <img src="${pet.pet_image[0]}" alt="${pet.pet_breed}" class="w-full h-48 object-cover rounded-t">
       <div class="p-4">
-        <h3 class="font-bold text-lg">${pet.name}</h3>
+        <h3 class="font-bold text-lg">${pet.pet_breed}</h3>
         <p>Location: ${pet.location}</p>
-        <p>Name: ${pet.poster}</p>
-        <p>Phone no: ${pet.phone}</p>
+        <p>Name: ${pet.user_name}</p>
+        <p>Phone no: ${pet.phone_number}</p>
       </div>
     `;
     card.onclick = () => openModal(pet);
@@ -36,14 +36,14 @@ function openModal(pet) {
   const modal = document.getElementById("petModal");
   const modalContent = document.getElementById("modalContent");
   modalContent.innerHTML = `
-    <h2 class="text-2xl font-bold mb-2">${pet.name}</h2>
+    <h2 class="text-2xl font-bold mb-2">${pet.pet_breed}</h2>
     <div class="flex overflow-x-auto gap-2 mb-4">
-      ${pet.images.map(img => `<img src="${img}" class="h-32 w-32 object-cover rounded">`).join("")}
+      ${pet.pet_image.map(img => `<img src="${img}" class="h-32 w-32 object-cover rounded">`).join("")}
     </div>
     <p><strong>Location:</strong> ${pet.location}</p>
     <p><strong>Description:</strong> ${pet.description}</p>
-    <p><strong>Poster:</strong> ${pet.poster}</p>
-    <p><strong>Phone:</strong> ${pet.phone}</p>
+    <p><strong>Poster:</strong> ${pet.user_name}</p>
+    <p><strong>Phone:</strong> ${pet.phone_number}</p>
   `;
   modal.classList.remove("hidden");
 }
@@ -66,6 +66,7 @@ window.onload = () => {
     const files = data.getAll("images");
 
     const imageUrls = [];
+
     for (const file of files) {
       const fileName = `${Date.now()}-${file.name}`;
       const { data: imgData, error: uploadError } = await supabase.storage
@@ -87,12 +88,12 @@ window.onload = () => {
     }
 
     const newPet = {
-      name: data.get("name"),
+      pet_breed: data.get("name"),
       location: data.get("location"),
-      poster: data.get("poster"),
-      phone: data.get("phone"),
+      user_name: data.get("poster"),
+      phone_number: data.get("phone"),
       description: data.get("description"),
-      images: imageUrls
+      pet_image: imageUrls
     };
 
     const { error: insertError } = await supabase
