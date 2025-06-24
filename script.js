@@ -25,7 +25,7 @@ function renderPets(petList) {
   petList.forEach(pet => {
     const card = document.createElement("div");
     card.className = "bg-white rounded shadow cursor-pointer hover:shadow-lg";
-    card.innerHTML = 
+    card.innerHTML = `
       <img src="${pet.pet_image?.[0] || ''}" alt="${pet.pet_breed}" class="w-full h-48 object-cover rounded-t">
       <div class="p-4">
         <h3 class="font-bold text-lg">${pet.pet_breed}</h3>
@@ -33,7 +33,7 @@ function renderPets(petList) {
         <p>Name: ${pet.user_name}</p>
         <p>Phone no: ${pet.phone_number}</p>
       </div>
-    ;
+    `;
     card.onclick = () => openModal(pet);
     petGrid.appendChild(card);
   });
@@ -42,16 +42,16 @@ function renderPets(petList) {
 function openModal(pet) {
   const modal = document.getElementById("petModal");
   const modalContent = document.getElementById("modalContent");
-  modalContent.innerHTML = 
+  modalContent.innerHTML = `
     <h2 class="text-2xl font-bold mb-2">${pet.pet_breed}</h2>
     <div class="flex overflow-x-auto gap-2 mb-4">
-      ${pet.pet_image.map(img => <img src="${img}" class="h-32 w-32 object-cover rounded">).join("")}
+      ${pet.pet_image.map(img => `<img src="${img}" class="h-32 w-32 object-cover rounded">`).join("")}
     </div>
     <p><strong>Location:</strong> ${pet.location}</p>
     <p><strong>Description:</strong> ${pet.description}</p>
     <p><strong>Poster:</strong> ${pet.user_name}</p>
     <p><strong>Phone:</strong> ${pet.phone_number}</p>
-  ;
+  `;
   modal.classList.remove("hidden");
 }
 
@@ -75,7 +75,7 @@ window.onload = () => {
     const imageUrls = [];
 
     for (const file of files) {
-      const fileName = ${Date.now()}-${file.name};
+      const fileName = `${Date.now()}-${file.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('pet-images')
         .upload(fileName, file);
@@ -97,10 +97,10 @@ window.onload = () => {
     const newPet = {
       pet_breed: formData.get("name"),
       location: formData.get("location"),
-      user_name: formData.get("poster"),
+      user_name: formData.get("posted by"),
       phone_number: formData.get("phone"),
       description: formData.get("description"),
-      pet_image: imageUrls // Must be text[]
+      pet_image: imageUrls
     };
 
     const { error: insertError } = await supabase
