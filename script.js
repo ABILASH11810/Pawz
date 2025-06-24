@@ -64,8 +64,6 @@ window.onload = () => {
     e.preventDefault();
     const data = new FormData(this);
     const files = data.getAll("images");
-
-    // ✅ Upload image to Supabase Storage
     const imageUrls = [];
 
     for (const file of files) {
@@ -80,11 +78,7 @@ window.onload = () => {
         return;
       }
 
-      const { data: publicUrlData } = supabase
-        .storage
-        .from('pet-images')
-        .getPublicUrl(fileName);
-
+      const { data: publicUrlData } = supabase.storage.from('pet-images').getPublicUrl(fileName);
       imageUrls.push(publicUrlData.publicUrl);
     }
 
@@ -97,9 +91,7 @@ window.onload = () => {
       images: imageUrls
     };
 
-    const { error: insertError } = await supabase
-      .from('Paws_information')
-      .insert([newPet]);
+    const { error: insertError } = await supabase.from('Paws_information').insert([newPet]);
 
     if (insertError) {
       console.error('Insert failed:', insertError);
