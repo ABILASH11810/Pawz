@@ -1,4 +1,4 @@
-const supabase = supabase.createClient(
+const supabase = window.supabase.createClient(
   'https://refbbidtdyuoviourfre.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlZmJiaWR0ZHl1b3Zpb3VyZnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NTkxODIsImV4cCI6MjA2NjMzNTE4Mn0.em5QwYJjLZuVm5tWxNO-2AsJgutMw5gBQ21NvNY8Skc'
 );
@@ -64,8 +64,8 @@ window.onload = () => {
     e.preventDefault();
     const data = new FormData(this);
     const files = data.getAll("images");
-    const imageUrls = [];
 
+    const imageUrls = [];
     for (const file of files) {
       const fileName = `${Date.now()}-${file.name}`;
       const { data: imgData, error: uploadError } = await supabase.storage
@@ -78,7 +78,11 @@ window.onload = () => {
         return;
       }
 
-      const { data: publicUrlData } = supabase.storage.from('pet-images').getPublicUrl(fileName);
+      const { data: publicUrlData } = supabase
+        .storage
+        .from('pet-images')
+        .getPublicUrl(fileName);
+
       imageUrls.push(publicUrlData.publicUrl);
     }
 
@@ -91,7 +95,9 @@ window.onload = () => {
       images: imageUrls
     };
 
-    const { error: insertError } = await supabase.from('Paws_information').insert([newPet]);
+    const { error: insertError } = await supabase
+      .from('Paws_information')
+      .insert([newPet]);
 
     if (insertError) {
       console.error('Insert failed:', insertError);
