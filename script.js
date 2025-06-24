@@ -10,7 +10,11 @@ async function fetchPets() {
     .from('Paws_information')
     .select('pet_breed, location, user_name, phone_number, description, pet_image');
 
-  if (error) return console.error('Fetch error:', error);
+  if (error) {
+    console.error('Fetch error:', error);
+    return;
+  }
+
   pets = data;
   renderPets(pets);
 }
@@ -65,14 +69,14 @@ window.onload = () => {
 
   document.getElementById("newPetForm").onsubmit = async function (e) {
     e.preventDefault();
-    const data = new FormData(this);
-    const files = data.getAll("images");
+    const formData = new FormData(this);
+    const files = formData.getAll("images");
 
     const imageUrls = [];
 
     for (const file of files) {
       const fileName = `${Date.now()}-${file.name}`;
-      const { data: imgData, error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('pet-images')
         .upload(fileName, file);
 
@@ -91,12 +95,12 @@ window.onload = () => {
     }
 
     const newPet = {
-      pet_breed: data.get("name"),
-      location: data.get("location"),
-      user_name: data.get("poster"),
-      phone_number: data.get("phone"),
-      description: data.get("description"),
-      pet_image: imageUrls
+      pet_breed: formData.get("name"),
+      location: formData.get("location"),
+      user_name: formData.get("poster"),
+      phone_number: formData.get("phone"),
+      description: formData.get("description"),
+      pet_image: imageUrls // Must be text[]
     };
 
     const { error: insertError } = await supabase
