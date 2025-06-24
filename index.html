@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pawz - Pet Adoption</title>
+   <script src="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlZmJiaWR0ZHl1b3Zpb3VyZnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NTkxODIsImV4cCI6MjA2NjMzNTE4Mn0.em5QwYJjLZuVm5tWxNO-2AsJgutMw5gBQ21NvNY8Skc"></script>
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+  <header class="sticky top-0 z-10 bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto">
+      <h1 class="text-2xl font-bold mb-2">Pawz 🐾</h1>
+      <input type="text" id="searchBar" placeholder="Search pets by name or location..." class="w-full p-2 rounded text-black">
+    </div>
+  </header>
+
+  <main class="container mx-auto p-4 pb-20">
+    <div id="petGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <!-- Pets will appear here -->
+    </div>
+  </main>
+
+  <footer class="fixed bottom-4 right-4">
+    <button id="uploadButton" class="bg-blue-600 text-white px-6 py-3 rounded-full text-lg shadow hover:bg-blue-700">
+      <i class="fas fa-plus mr-2"></i>Upload
+    </button>
+  </footer>
+
+  <!-- Modal -->
+  <div id="petModal" class="modal hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-30">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md relative">
+      <button class="close absolute top-2 right-2 text-xl">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Upload Form -->
+  <div id="uploadForm" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-30">
+    <form id="newPetForm" class="bg-white p-6 rounded-lg w-full max-w-md" enctype="multipart/form-data">
+      <h2 class="text-xl font-bold mb-4">Upload</h2>
+      <input name="name" type="text" required placeholder="Pet Breed Ex:Golden Retriver Dog, Persian cat, Love birds" class="w-full mb-2 p-2 border rounded" />
+      <input name="location" type="text" required placeholder="Location" class="w-full mb-2 p-2 border rounded" />
+      <input name="poster" type="text" required placeholder="Your Name" class="w-full mb-2 p-2 border rounded" />
+      <input name="phone" type="tel" required placeholder="Phone Number" pattern="\d{10}" class="w-full mb-2 p-2 border rounded" />
+      <textarea name="description" rows="3" placeholder="Description" class="w-full mb-2 p-2 border rounded"></textarea>
+      <input name="images" type="file" multiple accept="image/*" class="w-full mb-4" />
+      <div class="flex justify-end gap-2">
+        <button type="button" id="cancelUpload" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
