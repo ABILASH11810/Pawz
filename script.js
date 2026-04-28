@@ -1,10 +1,13 @@
-const supabase = window.supabase.createClient(
+// ✅ Prevent duplicate Supabase initialization
+const supabase = window.supabaseClient || window.supabase.createClient(
   'https://lkoixnhbnwqztjyxkmdf.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrb2l4bmhibndxenRqeXhrbWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTExNDMsImV4cCI6MjA5MjkyNzE0M30.7iyC2i_h6_NUjks5KtOHIUPY30xYrcGpzWIcK74SuXU'
 );
+window.supabaseClient = supabase;
 
 let pets = [];
 
+// ✅ Fetch pets
 async function fetchPets() {
   const { data, error } = await supabase
     .from('Paws_information')
@@ -15,51 +18,66 @@ async function fetchPets() {
     return;
   }
 
-  pets = data;
+  console.log("DATA:", data); // 🔍 debug
+
+  pets = data || [];
   renderPets(pets);
 }
 
+// ✅ Render pets safely
 function renderPets(petList) {
   const petGrid = document.getElementById("petGrid");
   petGrid.innerHTML = "";
+
   petList.forEach(pet => {
+    const images = pet.pet_image || [];
+
     const card = document.createElement("div");
     card.className = "bg-white rounded shadow cursor-pointer hover:shadow-lg";
+
     card.innerHTML = `
-      <img src="${pet.pet_image?.[0] || ''}" alt="${pet.pet_breed}" class="w-full h-48 object-cover rounded-t">
+      <img src="${images[0] || ''}" alt="${pet.pet_breed}" class="w-full h-48 object-cover rounded-t">
       <div class="p-4">
-        <h3 class="font-bold text-lg">${pet.pet_breed}</h3>
-        <p>Location: ${pet.location}</p>
-        <p>Name: ${pet.user_name}</p>
-        <p>Phone no: ${pet.phone_number}</p>
+        <h3 class="font-bold text-lg">${pet.pet_breed || 'Unknown'}</h3>
+        <p>Location: ${pet.location || '-'}</p>
+        <p>Name: ${pet.user_name || '-'}</p>
+        <p>Phone: ${pet.phone_number || '-'}</p>
       </div>
     `;
+
     card.onclick = () => openModal(pet);
     petGrid.appendChild(card);
   });
 }
 
+// ✅ Modal (safe)
 function openModal(pet) {
   const modal = document.getElementById("petModal");
   const modalContent = document.getElementById("modalContent");
+
+  const images = pet.pet_image || [];
+
   modalContent.innerHTML = `
     <h2 class="text-2xl font-bold mb-2">${pet.pet_breed}</h2>
     <div class="flex overflow-x-auto gap-2 mb-4">
-      ${pet.pet_image.map(img => `<img src="${img}" class="h-32 w-32 object-cover rounded">`).join("")}
+      ${images.map(img => `<img src="${img}" class="h-32 w-32 object-cover rounded">`).join("")}
     </div>
     <p><strong>Location:</strong> ${pet.location}</p>
-    <p><strong>Description:</strong> ${pet.description}</p>
+    <p><strong>Description:</strong> ${pet.description || '-'}</p>
     <p><strong>Poster:</strong> ${pet.user_name}</p>
     <p><strong>Phone:</strong> ${pet.phone_number}</p>
   `;
+
   modal.classList.remove("hidden");
 }
 
-window.onload = () => {
+// ✅ DOM Ready (better than window.onload)
+document.addEventListener("DOMContentLoaded", () => {
   const uploadButton = document.getElementById("uploadButton");
   const uploadForm = document.getElementById("uploadForm");
   const cancelUpload = document.getElementById("cancelUpload");
 
+  // Close modal
   document.querySelectorAll(".close").forEach(btn => {
     btn.onclick = () => document.getElementById("petModal").classList.add("hidden");
   });
@@ -67,16 +85,21 @@ window.onload = () => {
   uploadButton.onclick = () => uploadForm.classList.remove("hidden");
   cancelUpload.onclick = () => uploadForm.classList.add("hidden");
 
+  // ✅ Submit form
   document.getElementById("newPetForm").onsubmit = async function (e) {
     e.preventDefault();
+
     const formData = new FormData(this);
     const files = formData.getAll("images");
 
     const imageUrls = [];
 
     for (const file of files) {
+      if (!file || file.size === 0) continue;
+
       const fileName = `${Date.now()}-${file.name}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
+
+      const { error: uploadError } = await supabase.storage
         .from('pet-images')
         .upload(fileName, file);
 
@@ -94,10 +117,11 @@ window.onload = () => {
       imageUrls.push(publicUrlData.publicUrl);
     }
 
+    // ✅ FIXED field names (match HTML)
     const newPet = {
-      pet_breed: formData.get("name"),
+      pet_breed: formData.get("pet_breed"),
       location: formData.get("location"),
-      user_name: formData.get("posted by"),
+      user_name: formData.get("user_name"),
       phone_number: formData.get("phone"),
       description: formData.get("description"),
       pet_image: imageUrls
@@ -113,11 +137,13 @@ window.onload = () => {
       return;
     }
 
+    // ✅ Update UI instantly
     pets.unshift(newPet);
     renderPets(pets);
+
     uploadForm.classList.add("hidden");
     this.reset();
   };
 
   fetchPets();
-};
+});
