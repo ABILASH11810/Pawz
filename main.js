@@ -1,4 +1,3 @@
-// ✅ Prevent duplicate Supabase initialization
 const supabase = window.supabaseClient || window.supabase.createClient(
   'https://lkoixnhbnwqztjyxkmdf.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrb2l4bmhibndxenRqeXhrbWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTExNDMsImV4cCI6MjA5MjkyNzE0M30.7iyC2i_h6_NUjks5KtOHIUPY30xYrcGpzWIcK74SuXU'
@@ -7,7 +6,7 @@ window.supabaseClient = supabase;
 
 let pets = [];
 
-// ✅ Fetch pets
+
 async function fetchPets() {
   const { data, error } = await supabase
     .from('Paws_information')
@@ -24,7 +23,7 @@ async function fetchPets() {
   renderPets(pets);
 }
 
-// ✅ Render pets safely
+
 function renderPets(petList) {
   const petGrid = document.getElementById("petGrid");
   petGrid.innerHTML = "";
@@ -50,7 +49,6 @@ function renderPets(petList) {
   });
 }
 
-// ✅ Modal (safe)
 function openModal(pet) {
   const modal = document.getElementById("petModal");
   const modalContent = document.getElementById("modalContent");
@@ -71,7 +69,7 @@ function openModal(pet) {
   modal.classList.remove("hidden");
 }
 
-// ✅ DOM Ready (better than window.onload)
+
 document.addEventListener("DOMContentLoaded", () => {
   const uploadButton = document.getElementById("uploadButton");
   const uploadForm = document.getElementById("uploadForm");
@@ -85,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
   uploadButton.onclick = () => uploadForm.classList.remove("hidden");
   cancelUpload.onclick = () => uploadForm.classList.add("hidden");
 
-  // ✅ Submit form
   document.getElementById("newPetForm").onsubmit = async function (e) {
     e.preventDefault();
 
@@ -117,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
       imageUrls.push(publicUrlData.publicUrl);
     }
 
-    // ✅ FIXED field names (match HTML)
+
     const newPet = {
       pet_breed: formData.get("pet_breed"),
       location: formData.get("location"),
@@ -137,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // ✅ Update UI instantly
     pets.unshift(newPet);
     renderPets(pets);
 
