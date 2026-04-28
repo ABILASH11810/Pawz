@@ -1,6 +1,6 @@
 const supabase = window.supabase.createClient(
-  'https://refbbidtdyuoviourfre.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlZmJiaWR0ZHl1b3Zpb3VyZnJlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NTkxODIsImV4cCI6MjA2NjMzNTE4Mn0.em5QwYJjLZuVm5tWxNO-2AsJgutMw5gBQ21NvNY8Skc'
+  'https://lkoixnhbnwqztjyxkmdf.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxrb2l4bmhibndxenRqeXhrbWRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzczNTExNDMsImV4cCI6MjA5MjkyNzE0M30.7iyC2i_h6_NUjks5KtOHIUPY30xYrcGpzWIcK74SuXU'
 );
 
 let pets = [];
